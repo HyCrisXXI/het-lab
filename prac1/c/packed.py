@@ -18,7 +18,7 @@ def main():
 		sys.stdout.buffer.write(byte2)
 		sys.stdout.buffer.write(byte4)
   
-		print(byte1 + "/n" + byte2 +"/n" + byte4)
+		print(f"{byte1}\n{byte2}\n{byte4}")
 	except struct.error as e:
 		print(f'Error de empaquetado: {e}. (El número es muy grande)')
 
