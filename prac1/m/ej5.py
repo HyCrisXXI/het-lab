@@ -1,16 +1,21 @@
 import base64
+import sys
+
+if(len(sys.argv) < 2):
+    sys.exit("Uso: ej5.py <archivo codificado> [<archivo salida>]")
+
+input_file = sys.argv[1]
+
+output_file = sys.argv[2] if len(sys.argv) > 2 else input_file + ".decoded"
 
 try:
-    with open("hosts_b64.txt", "r") as f:
-        contenido_encoded = f.read()
+    with open(input_file, "r") as encoded_file:
+        encoded_content = encoded_file.read()
     
-    contenido_decoded = base64.b64decode(contenido_encoded)
-    
-    print(contenido_decoded.decode('utf-8'))
+    decoded_content = base64.b64decode(encoded_content)
 
-    with open("hosts_decoded.txt", "w") as decoded_file:
-        decoded_file.write(contenido_decoded)
-
+    with open(output_file, "wb") as decoded_file:
+        decoded_file.write(decoded_content)
     
 except IOError:
-    print("Error: El archivo hosts_b64.txt no existe.")
+    sys.exit(f"Error: El archivo {input_file} no existe.")

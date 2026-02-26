@@ -1,26 +1,19 @@
 import struct
 import sys
 
-if len(sys.argv) > 1:
-    try:
-        num = int(sys.argv[1])
-    except ValueError:
-        print("El argumento debe ser un número entero.")
-        sys.exit(1)
-    print(f"Número {num}")
-    
-    try:   
-        print(f"1 byte:  {struct.pack('<b', num)}")
-    except struct.error as e:
-        print(f"Error: {e}")
-    try:   
-        print(f"2 bytes: {struct.pack('<h', num)}")
-    except struct.error as e:
-        print(f"Error: {e}")
-    try:   
-        print(f"4 bytes: {struct.pack('<i', num)}")
-    except struct.error as e:
-        print(f"Error: {e}")
+if len(sys.argv) < 2:
+    sys.exit("Uso: python3 ej6.py <numero>")
 
-else:
-    print("Dar un número como argumento al ejecutar el programa.")
+try:
+    num = int(sys.argv[1])
+except ValueError:
+    sys.exit("El argumento debe ser un número entero")
+    
+try:   
+    b1 = struct.pack('<B', num)
+    b2 = struct.pack('<H', num)   
+    b4 = struct.pack('<i', num)
+except struct.error as e:
+    sys.exit(f"Error: {e}")
+
+sys.stdout.buffer.write(b1 + b2 + b4)
