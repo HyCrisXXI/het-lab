@@ -7,6 +7,7 @@ if len(argv) > 1:
             lines= fd.readlines()
             for line in lines:
                 print(line, end='')
+            print()
 
     except IOError as error:
         print("No existe " + nombre_fichero + ".")
