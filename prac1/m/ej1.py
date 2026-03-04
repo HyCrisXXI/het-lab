@@ -29,7 +29,7 @@ class PythonBasics:
     def is_par(a: int) -> bool:
         try:
             num = int(a)
-            return True if (num % 2) == 0 else False
+            return not (num % 2)
         except:
             print("Introduzca un número válido")
     
