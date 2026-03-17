@@ -20,7 +20,7 @@ try:
             lines = request.splitlines()
             if len(lines) > 0:
                 first_line = lines[0].split()
-                url = first_line[1] if len(first_line) > 1 else "/"
+                url = first_line[1]
 
                 user_agent = ""
                 for line in lines:
