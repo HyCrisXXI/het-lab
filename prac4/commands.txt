@@ -11,8 +11,11 @@ info register esp
 x/100xw $esp-64
 
 # other:
-objdump -d vuln # localizar main
-readelf -aW # localizar global
+objdump -d vuln | grep main # locate main
+objdump -d vuln | grep system # locate system
+readelf -aW | grep global # locate global
+
+(python3 exploit_c.py 0x08049070 0x0804c040; cat) | ./vuln
 
 gcc -m32 -no-pie -fomit-frame-pointer -fno-stack-protector -z execstack vuln.c -o vuln
 
